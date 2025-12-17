@@ -101,3 +101,7 @@ ServiceFabricBackup/
 # Temporary files
 *.tmp
 *.temp
+
+# Installer output
+installer-output/
+*.zip
