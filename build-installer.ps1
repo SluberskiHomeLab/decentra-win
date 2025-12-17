@@ -21,7 +21,7 @@ if (-not (Test-Path $LogDir)) {
 }
 
 # Start transcript to capture all output
-Start-Transcript -Path $LogFile -Append
+Start-Transcript -Path $LogFile
 
 Write-Host "Logging to: $LogFile" -ForegroundColor Cyan
 
