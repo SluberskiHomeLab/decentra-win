@@ -32,7 +32,7 @@ function Write-Error { Write-Host $args -ForegroundColor Red }
 
 # Get script directory
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$RootDir = Split-Path -Parent $ScriptDir
+$RootDir = $ScriptDir
 $ProjectDir = Join-Path $RootDir "DecentraWin"
 $OutputDir = Join-Path $RootDir "installer-output"
 $PublishDir = Join-Path $ProjectDir "bin\$Configuration\net8.0-windows\win-x64\publish"

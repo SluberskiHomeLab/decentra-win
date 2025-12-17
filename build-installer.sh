@@ -26,15 +26,21 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 info() {
-    echo -e "${CYAN}$1${NC}" | tee -a "$LOG_FILE"
+    # Display with color on console, plain text in log
+    echo -e "${CYAN}$1${NC}"
+    echo "$1" >> "$LOG_FILE"
 }
 
 success() {
-    echo -e "${GREEN}$1${NC}" | tee -a "$LOG_FILE"
+    # Display with color on console, plain text in log
+    echo -e "${GREEN}$1${NC}"
+    echo "$1" >> "$LOG_FILE"
 }
 
 error() {
-    echo -e "${RED}$1${NC}" | tee -a "$LOG_FILE"
+    # Display with color on console, plain text in log
+    echo -e "${RED}$1${NC}"
+    echo "$1" >> "$LOG_FILE"
 }
 
 # Get script directory
@@ -128,11 +134,10 @@ info "Note: To create a Windows installer (.exe), run build-installer.ps1"
 info "      on a Windows machine with Inno Setup installed."
 info ""
 
-# Display log file location (plain text to log, colored to console)
-echo "" | tee -a "$LOG_FILE"
+# Display log file location
+echo ""
 echo "=========================================" | tee -a "$LOG_FILE"
 echo "  Log file saved to:" | tee -a "$LOG_FILE"
 echo "  $LOG_FILE" | tee -a "$LOG_FILE"
 echo "=========================================" | tee -a "$LOG_FILE"
-echo ""
-echo -e "${GREEN}Build completed successfully! Log saved to: $LOG_FILE${NC}"
+echo "" | tee -a "$LOG_FILE"
