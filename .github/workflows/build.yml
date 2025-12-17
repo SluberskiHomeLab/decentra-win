@@ -1,0 +1,53 @@
+name: Build
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build -c Release --no-restore
+      
+    - name: Publish
+      run: |
+        dotnet publish DecentraWin/DecentraWin.csproj `
+          -c Release `
+          -r win-x64 `
+          --self-contained true `
+          -p:PublishSingleFile=false `
+          -p:PublishReadyToRun=true `
+          -p:IncludeNativeLibrariesForSelfExtract=true
+    
+    - name: Create ZIP Archive
+      run: |
+        $version = "1.0.0"
+        $buildNumber = "${{ github.run_number }}"
+        
+        New-Item -ItemType Directory -Force -Path installer-output
+        Compress-Archive -Path "DecentraWin\bin\Release\net8.0-windows\win-x64\publish\*" `
+                        -DestinationPath "installer-output\DecentraWin-v$version-build$buildNumber-win-x64.zip" `
+                        -CompressionLevel Optimal
+      
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: DecentraWin-Build-${{ github.run_number }}
+        path: installer-output/*.zip
+        retention-days: 30
