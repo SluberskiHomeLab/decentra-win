@@ -8,6 +8,17 @@ set -e
 CONFIGURATION="${1:-Release}"
 VERSION="${2:-1.0.0}"
 
+# Setup logging
+LOG_TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+LOG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/logs"
+LOG_FILE="$LOG_DIR/build-installer-$LOG_TIMESTAMP.log"
+
+# Create logs directory if it doesn't exist
+mkdir -p "$LOG_DIR"
+
+# Initialize log file (overwrites if exists, which is intentional for a new log)
+echo "Logging to: $LOG_FILE" | tee "$LOG_FILE"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -15,15 +26,21 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 info() {
+    # Display with color on console, plain text in log
     echo -e "${CYAN}$1${NC}"
+    echo "$1" >> "$LOG_FILE"
 }
 
 success() {
+    # Display with color on console, plain text in log
     echo -e "${GREEN}$1${NC}"
+    echo "$1" >> "$LOG_FILE"
 }
 
 error() {
+    # Display with color on console, plain text in log
     echo -e "${RED}$1${NC}"
+    echo "$1" >> "$LOG_FILE"
 }
 
 # Get script directory
@@ -115,4 +132,12 @@ info "The ZIP archive is ready for distribution."
 info ""
 info "Note: To create a Windows installer (.exe), run build-installer.ps1"
 info "      on a Windows machine with Inno Setup installed."
+info ""
+
+# Display log file location
+info ""
+info "========================================="
+info "  Log file saved to:"
+info "  $LOG_FILE"
+info "========================================="
 info ""
