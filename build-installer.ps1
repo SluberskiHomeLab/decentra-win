@@ -10,6 +10,21 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+# Setup logging
+$LogTimestamp = Get-Date -Format "yyyyMMdd-HHmmss"
+$LogDir = Join-Path $PSScriptRoot "logs"
+$LogFile = Join-Path $LogDir "build-installer-$LogTimestamp.log"
+
+# Create logs directory if it doesn't exist
+if (-not (Test-Path $LogDir)) {
+    New-Item -ItemType Directory -Path $LogDir -Force | Out-Null
+}
+
+# Start transcript to capture all output
+Start-Transcript -Path $LogFile -Append
+
+Write-Host "Logging to: $LogFile" -ForegroundColor Cyan
+
 # Colors for output
 function Write-Info { Write-Host $args -ForegroundColor Cyan }
 function Write-Success { Write-Host $args -ForegroundColor Green }
@@ -22,14 +37,15 @@ $ProjectDir = Join-Path $RootDir "DecentraWin"
 $OutputDir = Join-Path $RootDir "installer-output"
 $PublishDir = Join-Path $ProjectDir "bin\$Configuration\net8.0-windows\win-x64\publish"
 
-Write-Info "========================================="
-Write-Info "  DecentraWin Installer Build Script"
-Write-Info "========================================="
-Write-Info ""
-Write-Info "Configuration: $Configuration"
-Write-Info "Version: $Version"
-Write-Info "Root Directory: $RootDir"
-Write-Info ""
+try {
+    Write-Info "========================================="
+    Write-Info "  DecentraWin Installer Build Script"
+    Write-Info "========================================="
+    Write-Info ""
+    Write-Info "Configuration: $Configuration"
+    Write-Info "Version: $Version"
+    Write-Info "Root Directory: $RootDir"
+    Write-Info ""
 
 # Step 1: Clean previous builds
 if (-not $SkipBuild) {
@@ -177,3 +193,48 @@ if (-not $SkipInstaller -and $InnoSetup) {
     Write-Info "To create an installer, install Inno Setup and run this script again."
 }
 Write-Info ""
+
+} catch {
+    Write-Host ""
+    Write-Host "=========================================" -ForegroundColor Red
+    Write-Host "  BUILD FAILED!" -ForegroundColor Red
+    Write-Host "=========================================" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "Stack Trace:" -ForegroundColor Yellow
+    Write-Host $_.ScriptStackTrace -ForegroundColor Yellow
+    Write-Host ""
+    
+    # Stop transcript
+    Stop-Transcript
+    
+    Write-Host "=========================================" -ForegroundColor Red
+    Write-Host "  Log file saved to:" -ForegroundColor Red
+    Write-Host "  $LogFile" -ForegroundColor Cyan
+    Write-Host "=========================================" -ForegroundColor Red
+    Write-Host ""
+    
+    # Pause to prevent window from closing
+    if ($Host.Name -eq "ConsoleHost") {
+        Write-Host "Press any key to exit..." -ForegroundColor Yellow
+        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    }
+    
+    exit 1
+}
+
+# Stop transcript and display log location
+Stop-Transcript
+Write-Host ""
+Write-Host "=========================================" -ForegroundColor Green
+Write-Host "  Log file saved to:" -ForegroundColor Green
+Write-Host "  $LogFile" -ForegroundColor Cyan
+Write-Host "=========================================" -ForegroundColor Green
+Write-Host ""
+
+# Pause to prevent window from closing if script was double-clicked
+if ($Host.Name -eq "ConsoleHost") {
+    Write-Host "Press any key to exit..." -ForegroundColor Yellow
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+}

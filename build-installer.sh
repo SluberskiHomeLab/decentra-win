@@ -8,6 +8,21 @@ set -e
 CONFIGURATION="${1:-Release}"
 VERSION="${2:-1.0.0}"
 
+# Setup logging
+LOG_TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+LOG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/logs"
+LOG_FILE="$LOG_DIR/build-installer-$LOG_TIMESTAMP.log"
+
+# Create logs directory if it doesn't exist
+mkdir -p "$LOG_DIR"
+
+# Function to log and display output
+log_and_display() {
+    echo "$1" | tee -a "$LOG_FILE"
+}
+
+echo "Logging to: $LOG_FILE" | tee "$LOG_FILE"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -15,15 +30,15 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 info() {
-    echo -e "${CYAN}$1${NC}"
+    echo -e "${CYAN}$1${NC}" | tee -a "$LOG_FILE"
 }
 
 success() {
-    echo -e "${GREEN}$1${NC}"
+    echo -e "${GREEN}$1${NC}" | tee -a "$LOG_FILE"
 }
 
 error() {
-    echo -e "${RED}$1${NC}"
+    echo -e "${RED}$1${NC}" | tee -a "$LOG_FILE"
 }
 
 # Get script directory
@@ -116,3 +131,10 @@ info ""
 info "Note: To create a Windows installer (.exe), run build-installer.ps1"
 info "      on a Windows machine with Inno Setup installed."
 info ""
+
+echo ""
+echo -e "${GREEN}=========================================${NC}" | tee -a "$LOG_FILE"
+echo -e "${GREEN}  Log file saved to:${NC}" | tee -a "$LOG_FILE"
+echo -e "${CYAN}  $LOG_FILE${NC}" | tee -a "$LOG_FILE"
+echo -e "${GREEN}=========================================${NC}" | tee -a "$LOG_FILE"
+echo ""
