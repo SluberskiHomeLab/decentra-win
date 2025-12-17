@@ -84,7 +84,7 @@ else
 fi
 
 # Step 6: Create ZIP archive
-info "Step 5: Creating ZIP archive..."
+info "Step 6: Creating ZIP archive..."
 ZIP_FILENAME="DecentraWin-v$VERSION-win-x64.zip"
 ZIP_PATH="$OUTPUT_DIR/$ZIP_FILENAME"
 
