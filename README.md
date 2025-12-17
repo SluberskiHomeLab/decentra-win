@@ -56,6 +56,39 @@ dotnet run --project DecentraWin
 
 Or open `DecentraWin.sln` in Visual Studio and build/run from there.
 
+### Option 3: Build Installer/Package
+
+To create a distributable installer or ZIP package:
+
+#### On Windows (with PowerShell):
+
+```powershell
+# Build and create installer + ZIP archive
+.\build-installer.ps1
+
+# Specify a version
+.\build-installer.ps1 -Version "1.0.1"
+```
+
+**Requirements for installer creation:**
+- [Inno Setup 6](https://jrsoftware.org/isinfo.php) - Free installer creator
+
+The script will create:
+- `installer-output/DecentraWin-Setup-v{version}.exe` - Windows installer
+- `installer-output/DecentraWin-v{version}-win-x64.zip` - ZIP archive
+
+#### On Linux/macOS (creates ZIP only):
+
+```bash
+# Build and create ZIP archive
+./build-installer.sh
+
+# Specify a version
+./build-installer.sh Release 1.0.1
+```
+
+For detailed installer build instructions, see [installer/README.md](installer/README.md).
+
 ## Configuration
 
 ### Server Connection

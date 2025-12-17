@@ -7,6 +7,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    
+    <!-- Application Information -->
+    <AssemblyName>DecentraWin</AssemblyName>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    
+    <!-- Product Information -->
+    <Product>Decentra Windows Desktop Client</Product>
+    <Company>Sluberski Home Lab</Company>
+    <Description>A native Windows desktop application for the Decentra chat platform</Description>
+    <Copyright>Copyright © 2025 Sluberski Home Lab</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
