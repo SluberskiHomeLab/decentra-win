@@ -64,7 +64,7 @@ if (-not $SkipBuild) {
     Write-Info "Step 2: Restoring dependencies..."
     dotnet restore "$ProjectDir\DecentraWin.csproj"
     if ($LASTEXITCODE -ne 0) {
-        throw "Failed to restore dependencies"
+        throw "Failed to restore dependencies. Exit code: $LASTEXITCODE"
     }
     Write-Success "  Dependencies restored"
 }
@@ -74,7 +74,7 @@ if (-not $SkipBuild) {
     Write-Info "Step 3: Building application..."
     dotnet build "$ProjectDir\DecentraWin.csproj" -c $Configuration
     if ($LASTEXITCODE -ne 0) {
-        throw "Build failed"
+        throw "Build failed. Exit code: $LASTEXITCODE"
     }
     Write-Success "  Build completed"
 }
@@ -91,7 +91,7 @@ if (-not $SkipBuild) {
         -p:IncludeNativeLibrariesForSelfExtract=true
     
     if ($LASTEXITCODE -ne 0) {
-        throw "Publish failed"
+        throw "Publish failed. Exit code: $LASTEXITCODE"
     }
     Write-Success "  Application published to: $PublishDir"
 }
@@ -135,7 +135,7 @@ if (-not $SkipInstaller) {
         
         & $InnoSetup $IssFile
         if ($LASTEXITCODE -ne 0) {
-            throw "Installer creation failed"
+            throw "Installer creation failed. Exit code: $LASTEXITCODE"
         }
         
         Write-Success "  Installer created successfully!"
