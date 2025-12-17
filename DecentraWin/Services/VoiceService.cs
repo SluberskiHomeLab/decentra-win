@@ -104,7 +104,7 @@ public class VoiceService
             pc.setRemoteDescription(offer);
 
             var answer = pc.createAnswer();
-            pc.setLocalDescription(answer);
+            await pc.setLocalDescription(answer);
 
             await _webSocketService.SendMessageAsync(new WebSocketMessage
             {
