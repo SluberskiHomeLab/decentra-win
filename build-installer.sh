@@ -16,11 +16,7 @@ LOG_FILE="$LOG_DIR/build-installer-$LOG_TIMESTAMP.log"
 # Create logs directory if it doesn't exist
 mkdir -p "$LOG_DIR"
 
-# Function to log and display output
-log_and_display() {
-    echo "$1" | tee -a "$LOG_FILE"
-}
-
+# Initialize log file (overwrites if exists, which is intentional for a new log)
 echo "Logging to: $LOG_FILE" | tee "$LOG_FILE"
 
 # Colors for output
