@@ -64,8 +64,7 @@ if (-not $SkipBuild) {
     Write-Info "Step 2: Restoring dependencies..."
     dotnet restore "$ProjectDir\DecentraWin.csproj"
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "Failed to restore dependencies"
-        exit 1
+        throw "Failed to restore dependencies"
     }
     Write-Success "  Dependencies restored"
 }
@@ -75,8 +74,7 @@ if (-not $SkipBuild) {
     Write-Info "Step 3: Building application..."
     dotnet build "$ProjectDir\DecentraWin.csproj" -c $Configuration
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "Build failed"
-        exit 1
+        throw "Build failed"
     }
     Write-Success "  Build completed"
 }
@@ -93,8 +91,7 @@ if (-not $SkipBuild) {
         -p:IncludeNativeLibrariesForSelfExtract=true
     
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "Publish failed"
-        exit 1
+        throw "Publish failed"
     }
     Write-Success "  Application published to: $PublishDir"
 }
@@ -106,12 +103,10 @@ if (Test-Path $PublishDir) {
         $FileInfo = Get-Item $ExePath
         Write-Success "  Executable found: DecentraWin.exe ($([math]::Round($FileInfo.Length / 1MB, 2)) MB)"
     } else {
-        Write-Error "DecentraWin.exe not found in publish directory"
-        exit 1
+        throw "DecentraWin.exe not found in publish directory"
     }
 } else {
-    Write-Error "Publish directory not found: $PublishDir"
-    exit 1
+    throw "Publish directory not found: $PublishDir"
 }
 
 # Step 6: Create installer using Inno Setup (if available)
@@ -140,8 +135,7 @@ if (-not $SkipInstaller) {
         
         & $InnoSetup $IssFile
         if ($LASTEXITCODE -ne 0) {
-            Write-Error "Installer creation failed"
-            exit 1
+            throw "Installer creation failed"
         }
         
         Write-Success "  Installer created successfully!"
